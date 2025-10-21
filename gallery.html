@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 2rem 0;
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .gallery-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .gallery-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container" id="gallery"></div>
+
+    <script>
+        // List of files in the gallery folder
+        // Update this array if you add/remove files
+        const galleryFiles = [
+            'animationhunt.gif',
+            'animationunhap.gif',
+            'cellular.gif',
+            'maze.gif',
+            'metarecursive.png',
+            'Screenshot_2024-07-03_at_11.08.58_AM.png',
+            'Screenshot_2024-07-03_at_11.11.55_AM.png',
+            'Screenshot_2024-07-03_at_11.13.30_AM.png',
+            'Screenshot_2024-07-03_at_11.56.34_AM.png',
+            'Screenshot_2024-07-03_at_11.58.53_AM.png',
+            'Screenshot_2024-07-03_at_11.59.37_AM.png',
+            'jumpscare.jpeg',
+        ];
+        
+        const gallery = document.getElementById('gallery');
+        
+        // Create and append images
+        galleryFiles.forEach(filename => {
+            const img = document.createElement('img');
+            img.src = `gallery/${filename}`;
+            img.alt = filename;
+            img.onerror = function() {
+                console.error(`Failed to load: ${filename}`);
+            };
+            gallery.appendChild(img);
+        });
+    </script>
+</body>
+</html>
+
+

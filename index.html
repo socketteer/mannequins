@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mannequin Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        .container {
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .image-container {
+            position: relative;
+            margin: 0 auto 1.5rem;
+            display: inline-block;
+        }
+        
+        #mannequinImage, #talkingImage {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        #talkingImage {
+            position: absolute;
+            top: 42.3%;
+            left: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        
+        #talkingImage.active {
+            opacity: 1;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        label {
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="image-container">
+            <img id="mannequinImage" src="default.png" alt="Mannequin">
+            <img id="talkingImage" src="talking-crop.gif" alt="Talking">
+        </div>
+        <div class="controls">
+            <button id="blinkButton">Blink</button>
+            <div class="toggle-container">
+                <input type="checkbox" id="autoBlinkToggle">
+                <label for="autoBlinkToggle">Auto-Blink</label>
+            </div>
+            <div class="toggle-container">
+                <input type="checkbox" id="talkingToggle">
+                <label for="talkingToggle">Talking</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const image = document.getElementById('mannequinImage');
+        const talkingImage = document.getElementById('talkingImage');
+        const blinkButton = document.getElementById('blinkButton');
+        const autoBlinkToggle = document.getElementById('autoBlinkToggle');
+        const talkingToggle = document.getElementById('talkingToggle');
+        
+        let isBlinking = false;
+        let autoBlinkTimer = null;
+        
+        // Function to trigger a blink
+        function doBlink() {
+            if (isBlinking) return; // Prevent multiple blinks at once
+            
+            isBlinking = true;
+            // Force reload the GIF by adding a timestamp
+            image.src = 'blinking.GIF?t=' + new Date().getTime();
+            
+            // Estimate GIF duration - you can adjust this timing based on your GIF's actual duration
+            setTimeout(function() {
+                isBlinking = false;
+                image.src = 'default.png';
+            }, 2000); // Adjust this duration to match your blinking.GIF loop time
+        }
+        
+        // Function to get random blink interval (3-7 seconds with slight randomness)
+        function getRandomBlinkInterval() {
+            // Random interval between 3000ms (3s) and 7000ms (7s)
+            return Math.random() * 4000 + 3000;
+        }
+        
+        // Function to schedule next auto-blink
+        function scheduleNextBlink() {
+            if (autoBlinkTimer) {
+                clearTimeout(autoBlinkTimer);
+            }
+            
+            if (autoBlinkToggle.checked) {
+                const interval = getRandomBlinkInterval();
+                autoBlinkTimer = setTimeout(function() {
+                    doBlink();
+                    scheduleNextBlink(); // Schedule the next one
+                }, interval);
+            }
+        }
+        
+        // Blink button handler
+        blinkButton.addEventListener('click', doBlink);
+        
+        // Auto-blink toggle handler
+        autoBlinkToggle.addEventListener('change', function() {
+            if (this.checked) {
+                scheduleNextBlink();
+            } else {
+                if (autoBlinkTimer) {
+                    clearTimeout(autoBlinkTimer);
+                    autoBlinkTimer = null;
+                }
+            }
+        });
+        
+        // Talking toggle handler
+        talkingToggle.addEventListener('change', function() {
+            if (this.checked) {
+                talkingImage.classList.add('active');
+            } else {
+                talkingImage.classList.remove('active');
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            // 'b' key for blink
+            if (event.key === 'b' || event.key === 'B') {
+                blinkButton.click();
+            }
+            // 'a' key for auto-blink toggle
+            else if (event.key === 'a' || event.key === 'A') {
+                autoBlinkToggle.checked = !autoBlinkToggle.checked;
+                autoBlinkToggle.dispatchEvent(new Event('change'));
+            }
+            // 't' key for talking toggle
+            else if (event.key === 't' || event.key === 'T') {
+                talkingToggle.checked = !talkingToggle.checked;
+                talkingToggle.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+</body>
+</html>
+
