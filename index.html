@@ -110,7 +110,7 @@
         <div class="controls">
             <button id="blinkButton">Blink</button>
             <div class="toggle-container">
-                <input type="checkbox" id="autoBlinkToggle">
+                <input type="checkbox" id="autoBlinkToggle" checked>
                 <label for="autoBlinkToggle">Auto-Blink</label>
             </div>
             <div class="toggle-container">
@@ -227,6 +227,11 @@
                 cryToggle.dispatchEvent(new Event('change'));
             }
         });
+        
+        // Initialize auto-blink on page load if checked
+        if (autoBlinkToggle.checked) {
+            scheduleNextBlink();
+        }
     </script>
 </body>
 </html>
