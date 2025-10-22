@@ -30,22 +30,29 @@
             display: inline-block;
         }
         
-        #mannequinImage, #talkingImage {
+        #mannequinImage, #talkingImage, #cryImage {
             max-width: 100%;
             height: auto;
             display: block;
         }
         
-        #talkingImage {
+        #talkingImage, #cryImage {
             position: absolute;
-            top: 42.3%;
             left: 0;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s;
         }
         
-        #talkingImage.active {
+        #talkingImage {
+            top: 42.3%;
+        }
+        
+        #cryImage {
+            top: 0;
+        }
+        
+        #talkingImage.active, #cryImage.active {
             opacity: 1;
         }
         
@@ -98,6 +105,7 @@
         <div class="image-container">
             <img id="mannequinImage" src="default.png" alt="Mannequin">
             <img id="talkingImage" src="talking-crop.gif" alt="Talking">
+            <img id="cryImage" src="cry.GIF" alt="Crying">
         </div>
         <div class="controls">
             <button id="blinkButton">Blink</button>
@@ -109,15 +117,21 @@
                 <input type="checkbox" id="talkingToggle">
                 <label for="talkingToggle">Talking</label>
             </div>
+            <div class="toggle-container">
+                <input type="checkbox" id="cryToggle">
+                <label for="cryToggle">Crying</label>
+            </div>
         </div>
     </div>
 
     <script>
         const image = document.getElementById('mannequinImage');
         const talkingImage = document.getElementById('talkingImage');
+        const cryImage = document.getElementById('cryImage');
         const blinkButton = document.getElementById('blinkButton');
         const autoBlinkToggle = document.getElementById('autoBlinkToggle');
         const talkingToggle = document.getElementById('talkingToggle');
+        const cryToggle = document.getElementById('cryToggle');
         
         let isBlinking = false;
         let autoBlinkTimer = null;
@@ -182,6 +196,15 @@
             }
         });
         
+        // Crying toggle handler
+        cryToggle.addEventListener('change', function() {
+            if (this.checked) {
+                cryImage.classList.add('active');
+            } else {
+                cryImage.classList.remove('active');
+            }
+        });
+        
         // Keyboard shortcuts
         document.addEventListener('keydown', function(event) {
             // 'b' key for blink
@@ -197,6 +220,11 @@
             else if (event.key === 't' || event.key === 'T') {
                 talkingToggle.checked = !talkingToggle.checked;
                 talkingToggle.dispatchEvent(new Event('change'));
+            }
+            // 'c' key for crying toggle
+            else if (event.key === 'c' || event.key === 'C') {
+                cryToggle.checked = !cryToggle.checked;
+                cryToggle.dispatchEvent(new Event('change'));
             }
         });
     </script>
